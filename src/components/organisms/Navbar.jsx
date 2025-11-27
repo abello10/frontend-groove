@@ -58,8 +58,8 @@ function Navbar() {
                                 <>
                                     <span className="text-sm font-semibold">Hola, {user.nombre}</span>
                                     
-                                    {user.rol?.nombre === 'ADMIN' && (
-                                        <Link to="/admin" className="bg-white text-sky-600 px-3 py-1 rounded text-xs font-bold hover:bg-sky-50">
+                                    {user.rol?.nombre?.toUpperCase() === 'ADMIN' && (
+                                        <Link to="/admin" className="bg-white text-sky-600 px-3 py-1 rounded text-xs font-bold hover:bg-sky-50 transition">
                                             ADMIN
                                         </Link>
                                     )}
@@ -140,9 +140,9 @@ function Navbar() {
                                     <div className="px-3 mb-2 text-sky-200 text-sm font-semibold">
                                         Conectado como: <span className="text-white">{user.nombre}</span>
                                     </div>
-                                    {user.rol?.nombre === 'ADMIN' && (
-                                        <Link to="/admin" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-white hover:bg-sky-500 rounded-md">
-                                            Panel Admin
+                                    {user.rol?.nombre?.toUpperCase() === 'ADMIN' && (
+                                        <Link to="/admin" className="bg-white text-sky-600 px-3 py-1 rounded text-xs font-bold hover:bg-sky-50 transition">
+                                            ADMIN
                                         </Link>
                                     )}
                                     <button 
