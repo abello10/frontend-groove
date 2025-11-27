@@ -7,6 +7,7 @@ import Blog from './pages/user/Blog';
 import Productos from './pages/user/Productos';
 import Login from './pages/user/auth/Login';
 import Registro from './pages/user/auth/Registro';
+import Carrito from './pages/user/Carrito';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/productos" element={<Productos />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/carrito" element={<Carrito />} />
         <Route path="*" element={<div className="p-20 text-center">Página no encontrada :c </div>} />
       </Routes>
       <Footer />
