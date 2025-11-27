@@ -5,6 +5,8 @@ import Footer from './components/organisms/Footer';
 import Home from './pages/user/Home';
 import Blog from './pages/user/Blog';
 import Productos from './pages/user/Productos';
+import Login from './pages/user/auth/Login';
+import Registro from './pages/user/auth/Registro';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/productos" element={<Productos />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
         <Route path="*" element={<div className="p-20 text-center">Página no encontrada :c </div>} />
       </Routes>
       <Footer />
