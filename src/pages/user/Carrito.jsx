@@ -24,7 +24,7 @@ function Carrito() {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
                 <h2 className="text-3xl font-bold text-gray-400 mb-4">Tu carrito está vacío 🛒</h2>
-                <Link to="/catalogo" className="bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 transition">
+                <Link to="/productos" className="bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 transition">
                     Ir a comprar
                 </Link>
             </div>
