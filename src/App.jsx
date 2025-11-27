@@ -8,6 +8,17 @@ import Productos from './pages/user/Productos';
 import Login from './pages/user/auth/Login';
 import Registro from './pages/user/auth/Registro';
 import Carrito from './pages/user/Carrito';
+import Vista from './pages/admin/Vista';
+
+const AdminRoute = ({ children }) => {
+    const { user } = useAuth();
+
+    if (!user || user.rol?.nombre?.toUpperCase() !== 'ADMIN') {
+        return <Navigate to="/" replace />;
+    }
+    
+    return children;
+};
 
 function App() {
   return (
@@ -20,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/carrito" element={<Carrito />} />
+        <Route path="/admin" element={<AdminRoute> <Vista /> </AdminRoute>} />
         <Route path="*" element={<div className="p-20 text-center">Página no encontrada :c </div>} />
       </Routes>
       <Footer />
