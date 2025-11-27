@@ -9,6 +9,7 @@ import Login from './pages/user/auth/Login';
 import Registro from './pages/user/auth/Registro';
 import Carrito from './pages/user/Carrito';
 import Vista from './pages/admin/Vista';
+import { useAuth } from './context/AuthContext';
 
 const AdminRoute = ({ children }) => {
     const { user } = useAuth();
