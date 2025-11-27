@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../../services/api';
-import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
+import { useAuth } from '../../../context/AuthContext';
 
 function Login() {
     const [form, setForm] = useState({ correo: '', contrasena: '' });
