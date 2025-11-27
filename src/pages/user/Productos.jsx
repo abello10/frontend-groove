@@ -23,7 +23,7 @@ function Productos() {
                     {
                         type: "text",
                         text: [
-                            { id: 1, content: "Catálogo", variant: "h1", className: "text-4xl font-bold text-center mb-4 text-gray-800" },
+                            { id: 1, content: "Catálogo de productos", variant: "h1", className: "text-4xl font-bold text-center mb-4 text-gray-800" },
                             { id: 2, content: "No hay productos disponibles por el momento.", variant: "p", className: "text-center text-gray-500 text-lg" }
                         ]
                     }
@@ -35,7 +35,7 @@ function Productos() {
 
         } catch (err) {
             console.error("Error al cargar productos:", err);
-            setError("Hubo un problema cargando el catálogo. Intenta recargar la página.");
+            setError("Hubo un problema cargando el catálogo.");
         } finally {
             setLoading(false);
         }
