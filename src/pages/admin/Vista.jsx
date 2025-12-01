@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import AdminProductos from '../../components/organisms/admin/AdminProductos';
 import AdminUsuarios from '../../components/organisms/admin/AdminUsuarios';
 import AdminVentas from '../../components/organisms/admin/AdminVentas';
-// import AdminUsuarios from '../../components/organisms/admin/AdminUsuarios'; (Créalos después)
-// import AdminVentas from '../../components/organisms/admin/AdminVentas';
 
 function Vista() {
     const [activeTab, setActiveTab] = useState('productos');

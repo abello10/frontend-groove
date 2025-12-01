@@ -40,7 +40,7 @@ function Carrito() {
                     {cart.map((item) => (
                         <div key={item.id} className="flex items-center justify-between border-b border-gray-100 pb-4">
                             <div className="flex items-center gap-4">
-                                <img src={item.imagenes?.[0]?.url || "https://via.placeholder.com/100"} alt={item.nombre} className="w-16 h-16 object-cover rounded-md" />
+                                <img src={item.imagenes?.[0]?.url || "https://placehold.co/400x400?text=Groove"} alt={item.nombre} className="w-16 h-16 object-cover rounded-md" />
                                 <div>
                                     <h3 className="font-bold text-gray-800">{item.nombre}</h3>
                                     <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
