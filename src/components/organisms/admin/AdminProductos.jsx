@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../services/api';
+import { uploadToImgBB } from '../../../utils/uploadImage';
 
 function AdminProductos() {
     const [productos, setProductos] = useState([]);
     const [tipos, setTipos] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [isUploading, setIsUploading] = useState(null);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -40,19 +45,41 @@ function AdminProductos() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        let urlFinal = null;
+
+        if (selectedFile) {
+            setIsUploading(true);
+            urlFinal = await uploadToImgBB(selectedFile);
+            setIsUploading(false);
+
+            if (!urlFinal) return;
+        }
         
         const productoParaBackend = {
             nombre: formData.nombre,
             precio: parseFloat(formData.precio),
             stock: parseInt(formData.stock),
             descripcion: formData.descripcion,
-            tipo: { id: parseInt(formData.tipoId) }
+            tipo: { id: parseInt(formData.tipoId) },
+            imagenes: urlFinal ? [{ urlFinal }] : (editMode ? null : [])
         };
 
         try {
             if (editMode) {
+
+                if (!urlFinal) delete productoParaBackend.imagenes;
+
                 productoParaBackend.id = formData.id; 
                 await api.put(`/productos/${formData.id}`, productoParaBackend);
                 alert("Producto actualizado");
@@ -80,6 +107,8 @@ function AdminProductos() {
 
     const openCreate = () => {
         setFormData({ id: null, nombre: '', precio: '', stock: '', descripcion: '', tipoId: '' });
+        setSelectedFile(null);
+        setImagePreview(null);
         setEditMode(false);
         setIsModalOpen(true);
     };
@@ -93,6 +122,9 @@ function AdminProductos() {
             descripcion: prod.descripcion,
             tipoId: prod.tipo?.id || ''
         });
+        const currentImg = prod.imagenes?.[0]?.url;
+        setImagePreview(currentImg || null);
+        setSelectedFile(null);
         setEditMode(true);
         setIsModalOpen(true);
     };
@@ -114,6 +146,7 @@ function AdminProductos() {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Img</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio</th>
@@ -124,6 +157,7 @@ function AdminProductos() {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {productos.map(prod => (
                             <tr key={prod.id}>
+                                <img src={prod.imagenes?.[0]?.url || "https://via.placeholder.com/50"} alt="" className="w-10 h-10 object-cover rounded"/>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{prod.id}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{prod.nombre}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${prod.precio}</td>
@@ -143,6 +177,15 @@ function AdminProductos() {
                     <div className="bg-white rounded-lg p-6 w-full max-w-md">
                         <h3 className="text-xl font-bold mb-4">{editMode ? 'Editar Producto' : 'Crear Producto'}</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="border-2 border-dashed border-gray-300 p-4 rounded-lg text-center">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Imagen</label>
+                                <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-gray-500"/>
+                                
+                                {imagePreview && (
+                                    <img src={imagePreview} alt="Preview" className="mt-3 h-32 w-auto mx-auto object-contain rounded border" />
+                                )}
+                                {isUploading && <p className="text-sky-600 font-bold mt-2 animate-pulse">Subiendo imagen...</p>}
+                            </div>
                             <input name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} required className="w-full border p-2 rounded" />
                             <div className="grid grid-cols-2 gap-2">
                                 <input type="number" name="precio" placeholder="Precio" value={formData.precio} onChange={handleChange} required className="w-full border p-2 rounded" />
