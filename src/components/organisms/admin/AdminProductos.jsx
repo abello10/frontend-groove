@@ -72,7 +72,7 @@ function AdminProductos() {
             stock: parseInt(formData.stock),
             descripcion: formData.descripcion,
             tipo: { id: parseInt(formData.tipoId) },
-            imagenes: urlFinal ? [{ urlFinal }] : (editMode ? null : [])
+            imagenes: urlFinal ? [{ url: urlFinal }] : (editMode ? null : [])
         };
 
         try {
