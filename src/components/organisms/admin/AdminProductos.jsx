@@ -9,7 +9,7 @@ function AdminProductos() {
 
     const [selectedFile, setSelectedFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
-    const [isUploading, setIsUploading] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -36,6 +36,7 @@ function AdminProductos() {
             setTipos(tiposRes.data);
         } catch (error) {
             console.error("Error cargando datos admin:", error);
+            alert("Error cargando la lista de productos. Revisa la consola.");
         } finally {
             setLoading(false);
         }
@@ -51,47 +52,73 @@ function AdminProductos() {
             setSelectedFile(file);
             setImagePreview(URL.createObjectURL(file));
         }
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("🚀 INICIANDO SUBMIT...");
+
+        if (!formData.tipoId) {
+            alert("⚠️ Error: Debes seleccionar un TIPO de producto.");
+            return;
+        }
+        if (!formData.precio || isNaN(parseFloat(formData.precio))) {
+            alert("⚠️ Error: El PRECIO es inválido.");
+            return;
+        }
 
         let urlFinal = null;
 
-        if (selectedFile) {
-            setIsUploading(true);
-            urlFinal = await uploadToImgBB(selectedFile);
-            setIsUploading(false);
-
-            if (!urlFinal) return;
-        }
-        
-        const productoParaBackend = {
-            nombre: formData.nombre,
-            precio: parseFloat(formData.precio),
-            stock: parseInt(formData.stock),
-            descripcion: formData.descripcion,
-            tipo: { id: parseInt(formData.tipoId) },
-            imagenes: urlFinal ? [{ url: urlFinal }] : (editMode ? null : [])
-        };
-
         try {
+            if (selectedFile) {
+                console.log("📷 Subiendo imagen a ImgBB...");
+                setIsUploading(true);
+                urlFinal = await uploadToImgBB(selectedFile);
+                setIsUploading(false);
+                
+                console.log("✅ Imagen subida, URL:", urlFinal);
+
+                if (!urlFinal) {
+                    alert("❌ Error: Falló la subida de imagen a ImgBB. Revisa tu API Key.");
+                    return;
+                }
+            }
+
+            const productoParaBackend = {
+                nombre: formData.nombre,
+                precio: parseFloat(formData.precio),
+                stock: parseInt(formData.stock),
+                descripcion: formData.descripcion,
+                tipo: { id: parseInt(formData.tipoId) },
+                imagenes: urlFinal ? [{ url: urlFinal }] : []
+            };
+
+            console.log("📦 JSON a enviar al Backend:", productoParaBackend);
+
             if (editMode) {
-
                 if (!urlFinal) delete productoParaBackend.imagenes;
-
                 productoParaBackend.id = formData.id; 
+                console.log(`📡 Enviando PUT a /productos/${formData.id}`);
                 await api.put(`/productos/${formData.id}`, productoParaBackend);
-                alert("Producto actualizado");
+                alert("✅ ¡Producto actualizado correctamente!");
             } else {
+                console.log("📡 Enviando POST a /productos");
                 await api.post('/productos', productoParaBackend);
-                alert("Producto creado");
+                alert("✅ ¡Producto creado correctamente!");
             }
             
             closeModal();
             fetchData();
+
         } catch (error) {
-            alert("Error al guardar: " + error.message);
+            console.error("❌ ERROR FATAL EN EL PROCESO:", error);
+            if (error.response) {
+                console.error("Detalles del servidor:", error.response.data);
+                alert(`Error del Servidor (${error.response.status}): ${JSON.stringify(error.response.data)}`);
+            } else {
+                alert("Error de conexión: " + error.message);
+            }
+            setIsUploading(false);
         }
     };
 
@@ -99,9 +126,11 @@ function AdminProductos() {
         if (!window.confirm("¿Seguro que quieres eliminar este producto?")) return;
         try {
             await api.delete(`/productos/${id}`);
+            alert("Producto eliminado.");
             fetchData();
         } catch (error) {
-            alert("Error al eliminar");
+            console.error(error);
+            alert("Error al eliminar. Revisa la consola.");
         }
     };
 
@@ -131,7 +160,7 @@ function AdminProductos() {
 
     const closeModal = () => setIsModalOpen(false);
 
-    if (loading) return <div>Cargando panel...</div>;
+    if (loading) return <div className="p-10 text-center">Cargando panel...</div>;
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
@@ -157,7 +186,9 @@ function AdminProductos() {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {productos.map(prod => (
                             <tr key={prod.id}>
-                                <img src={prod.imagenes?.[0]?.url || "https://via.placeholder.com/50"} alt="" className="w-10 h-10 object-cover rounded"/>
+                                <td className="px-6 py-4">
+                                    <img src={prod.imagenes?.[0]?.url || "https://via.placeholder.com/50"} alt="" className="w-10 h-10 object-cover rounded"/>
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{prod.id}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{prod.nombre}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${prod.precio}</td>
@@ -174,35 +205,44 @@ function AdminProductos() {
 
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
                         <h3 className="text-xl font-bold mb-4">{editMode ? 'Editar Producto' : 'Crear Producto'}</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            
                             <div className="border-2 border-dashed border-gray-300 p-4 rounded-lg text-center">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Imagen</label>
                                 <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-gray-500"/>
-                                
                                 {imagePreview && (
                                     <img src={imagePreview} alt="Preview" className="mt-3 h-32 w-auto mx-auto object-contain rounded border" />
                                 )}
                                 {isUploading && <p className="text-sky-600 font-bold mt-2 animate-pulse">Subiendo imagen...</p>}
                             </div>
+
                             <input name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} required className="w-full border p-2 rounded" />
+                            
                             <div className="grid grid-cols-2 gap-2">
                                 <input type="number" name="precio" placeholder="Precio" value={formData.precio} onChange={handleChange} required className="w-full border p-2 rounded" />
                                 <input type="number" name="stock" placeholder="Stock" value={formData.stock} onChange={handleChange} required className="w-full border p-2 rounded" />
                             </div>
+                            
                             <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleChange} className="w-full border p-2 rounded" />
                             
                             <select name="tipoId" value={formData.tipoId} onChange={handleChange} required className="w-full border p-2 rounded bg-white">
                                 <option value="">Selecciona un Tipo</option>
-                                {tipos.map(tipo => (
-                                    <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
+                                {tipos.map(t => (
+                                    <option key={t.id} value={t.id}>{t.nombre}</option>
                                 ))}
                             </select>
 
                             <div className="flex justify-end gap-2 mt-6">
                                 <button type="button" onClick={closeModal} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancelar</button>
-                                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Guardar</button>
+                                <button 
+                                    type="submit" 
+                                    disabled={isUploading}
+                                    className={`px-4 py-2 text-white rounded ${isUploading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}
+                                >
+                                    {isUploading ? 'Procesando...' : 'Guardar'}
+                                </button>
                             </div>
                         </form>
                     </div>
