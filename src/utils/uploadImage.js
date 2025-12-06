@@ -15,7 +15,7 @@ export const uploadToImgBB = async (file) => {
             async (uri) => {
                 try {
                     const body = new FormData();
-                    body.append('image', uri);
+                    body.append('image', uri, 'upload.webp');
 
                     const response = await axios.post(
                         `https://api.imgbb.com/1/upload?key=${API_KEY}`,
@@ -28,7 +28,7 @@ export const uploadToImgBB = async (file) => {
                     resolve(null);
                 }
             },
-            'base64'
+            'blob'
         );
     });
 };
