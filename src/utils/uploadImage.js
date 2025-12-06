@@ -1,7 +1,7 @@
 import Resizer from 'react-image-file-resizer';
 import axios from 'axios';
 
-const API_KEY = import.meta.env.VITE_IMGBB_API_KEY;
+const API_KEY = "45799c7bb10ca7ed1bef67cf136b2cec";
 
 export const uploadToImgBB = async (file) => {
     return new Promise((resolve) => {
