@@ -5,6 +5,7 @@ import api from '../../services/api';
 
 function Productos() {
     const [productos, setProductos] = useState([]);
+    const [tipos, setTipos] = useState([]);
     const [loading, setLoading] = useState(true);
     const { addToCart } = useCart();
 
