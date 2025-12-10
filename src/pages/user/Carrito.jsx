@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../../services/api';
 
 function Carrito() {
+    
     const { cart, removeFromCart, clearCart, total, addToCart, decreaseQuantity } = useCart();
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -34,6 +35,18 @@ function Carrito() {
 
         if (!envioSeleccionado || !pagoSeleccionado) {
             alert("Por favor selecciona un método de envío y de pago.");
+            return;
+        }
+
+        
+        const productosSinStock = cart.filter(item => {
+            const stockReal = item.stock !== undefined ? item.stock : 0;
+            return item.quantity > stockReal;
+        });
+
+        if (productosSinStock.length > 0) {
+            const nombres = productosSinStock.map(i => i.nombre).join(", ");
+            alert(`No podemos procesar la compra. Los siguientes productos exceden el stock disponible: \n\n${nombres}\n\nPor favor, ajusta las cantidades.`);
             return;
         }
 
@@ -78,7 +91,7 @@ function Carrito() {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
                 <h2 className="text-3xl font-bold text-gray-400 mb-4">Tu carrito está vacío</h2>
-                <Link to="/catalogo" className="bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 transition">
+                <Link to="/productos" className="bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 transition">
                     Ir a comprar
                 </Link>
             </div>
