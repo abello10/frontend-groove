@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useEffectEvent } from 'react';
 import ProductoService from '../../services/ProductoService';
 import { useCart } from '../../context/CartContext';
+import api from '../../services/api';
 
 function Productos() {
     const [productos, setProductos] = useState([]);
