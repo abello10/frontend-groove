@@ -100,7 +100,7 @@ function Productos() {
                     
                     <div className="mb-8">
                         <div className="flex justify-between items-center mb-4 border-b pb-2">
-                            <h3 className="font-bold text-gray-800 text-lg">Categoría de productos</h3>
+                            <h3 className="font-bold text-gray-800 text-lg">Categoría</h3>
                             {filtroTipo && (
                                 <button onClick={() => setFiltroTipo(null)} className="text-xs text-red-500 hover:underline">
                                     Limpiar
