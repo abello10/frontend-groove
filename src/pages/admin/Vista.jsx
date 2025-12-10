@@ -10,27 +10,26 @@ function Vista() {
 
     return (
         <div className="min-h-screen bg-gray-100 flex">
-            {/* SIDEBAR */}
-            <aside className="w-64 bg-gray-900 text-white flex-shrink-0 hidden md:block">
+            <aside className="w-64 bg-indigo-950 text-white flex-shrink-0 hidden md:block">
                 <div className="p-6">
                     <h2 className="text-2xl font-bold text-sky-500">Admin Panel</h2>
                 </div>
                 <nav className="mt-6">
                     <button 
                         onClick={() => setActiveTab('productos')}
-                        className={`w-full text-left px-6 py-3 hover:bg-gray-800 transition ${activeTab === 'productos' ? 'bg-gray-800 border-l-4 border-sky-500' : ''}`}
+                        className={`w-full text-left px-6 py-3 hover:bg-indigo-950 transition ${activeTab === 'productos' ? 'bg-gray-800 border-l-4 border-sky-500' : ''}`}
                     >
                         Productos
                     </button>
                     <button 
                         onClick={() => setActiveTab('usuarios')}
-                        className={`w-full text-left px-6 py-3 hover:bg-gray-800 transition ${activeTab === 'usuarios' ? 'bg-gray-800 border-l-4 border-sky-500' : ''}`}
+                        className={`w-full text-left px-6 py-3 hover:bg-indigo-950 transition ${activeTab === 'usuarios' ? 'bg-gray-800 border-l-4 border-sky-500' : ''}`}
                     >
                         Usuarios
                     </button>
                     <button 
                         onClick={() => setActiveTab('ventas')}
-                        className={`w-full text-left px-6 py-3 hover:bg-gray-800 transition ${activeTab === 'ventas' ? 'bg-gray-800 border-l-4 border-sky-500' : ''}`}
+                        className={`w-full text-left px-6 py-3 hover:bg-indigo-950 transition ${activeTab === 'ventas' ? 'bg-gray-800 border-l-4 border-sky-500' : ''}`}
                     >
                         Historial Ventas
                     </button>
