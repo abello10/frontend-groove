@@ -90,7 +90,7 @@ function Productos() {
         <div className="min-h-screen bg-gray-50 py-12 px-4">
             <div className="w-full text-center mb-10">
                 <h1 className="text-4xl font-bold text-gray-800 border-b-4 border-sky-500 inline-block pb-2">
-                    Catálogo
+                    Catálogo de productos
                 </h1>
             </div>
 
