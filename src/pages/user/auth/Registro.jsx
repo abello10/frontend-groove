@@ -13,6 +13,13 @@ function Registro() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!form.correo.trim() || !form.correo.includes('@')||!form.correo.trim()||!form.correo.includes('.')||!form.correo.trim()) {
+            alert("Por favor, ingresa un correo electrónico válido.");
+            return; 
+        }
+        
+
         try {
             await api.post('/usuarios', form);
             alert("Cuenta creada con exito");
