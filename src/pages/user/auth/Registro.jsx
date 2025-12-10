@@ -18,6 +18,11 @@ function Registro() {
             alert("Por favor, ingresa un correo electrónico válido.");
             return; 
         }
+
+        if (form.contrasena.length < 6) {
+            alert("La contraseña debe tener al menos 6 caracteres.");
+            return; 
+        }
         
 
         try {
