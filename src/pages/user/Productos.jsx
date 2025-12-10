@@ -100,7 +100,7 @@ function Productos() {
                     
                     <div className="mb-8">
                         <div className="flex justify-between items-center mb-4 border-b pb-2">
-                            <h3 className="font-bold text-gray-800 text-lg">Categoría</h3>
+                            <h3 className="font-bold text-gray-800 text-lg">Categoría de productos</h3>
                             {filtroTipo && (
                                 <button onClick={() => setFiltroTipo(null)} className="text-xs text-red-500 hover:underline">
                                     Limpiar
@@ -131,7 +131,7 @@ function Productos() {
                             onChange={(e) => setOrdenPrecio(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-sky-500 bg-white text-sm"
                         >
-                            <option value="">Destacados</option>
+                            <option value="">Mostrar todos</option>
                             <option value="asc">Menor a Mayor</option>
                             <option value="desc">Mayor a Menor</option>
                         </select>
